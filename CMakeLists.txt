@@ -52,3 +52,8 @@ add_dependencies(dmp
                  dmp_generate_messages_py
                  dmp_generate_messages_lisp)
 target_link_libraries(dmp_server dmp ${catkin_LIBRARIES} ${Eigen_LIBRARIES})
+
+catkin_install_python(PROGRAMS
+  scripts/example_dmp.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
