@@ -10,6 +10,7 @@ cmake_modules
 roscpp
 rospy
 message_generation
+custom_ros_tools
 )
 find_package(Eigen REQUIRED)
 
