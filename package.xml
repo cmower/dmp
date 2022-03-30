@@ -30,5 +30,6 @@
   <run_depend>dmp_generate_messages</run_depend>
 
   <depend>custom_ros_tools</depend>
+  <depend>python-numpy</depend>
 
 </package>
