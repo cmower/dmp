@@ -8,7 +8,7 @@
   <description>Implements Dynamic Movement Primitives in a robot agnostic way</description>
 
   <author>Scott Niekum</author>
-  <maintainer email="sniekum@cs.umass.edu">Scott Niekum</maintainer>
+  <maintainer email="c.mower@ed.ac.uk">Chris E. Mower</maintainer>
 
   <license>BSD</license>
 
