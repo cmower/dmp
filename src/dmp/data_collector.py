@@ -1,13 +1,21 @@
 import rospy
+from abc import ABC, abstractmethod
 import numpy as np
-from typing import Union
+from typing import Union, Optional
 from custom_ros_tools.tf import TfInterface
 
-class DMPDataCollector:
+class DataCollector(ABC):
 
-    def __init__(self):
+    @abstractmethod
+    def get(self) -> Tuple[np.ndarray]:
+        pass
+
+class DMPDataCollector(DataCollector):
+
+    def __init__(self, zero_time: Optional[bool] = True):
         self.t = []
         self.p = []
+        self.zero_time = zero_time
 
     def log(self, t: float, p: np.ndarray):
         self.t.append(t)
@@ -15,18 +23,20 @@ class DMPDataCollector:
 
     def get(self):
         t = np.array(self.t)
+        if self.zero_time:
+            t -= t[0]
         pos_traj = np.array(self.p).T
         return t, pos_traj
 
-class TFPositionDMPDataCollector:
+class TFPositionDMPDataCollector(DataCollector):
 
-    def __init__(self, parent_frame_id, child_frame_id, hz=100):
+    def __init__(self, parent_frame_id: str, child_frame_id: str, hz: Optional[int] = 100, zero_time: Optional[bool] = True):
         self.timer = None
         self.duration = rospy.Duration(1.0/float(hz))
         self.parent_frame_id = parent_frame_id
         self.child_frame_id = child_frame_id
         self.tf = TfInterface()
-        self.data_collector = DMPDataCollector()
+        self.data_collector = DMPDataCollector(zero_time=zero_time)
 
     def start(self):
         self.timer = rospy.Timer(self.duration, self.main_loop)
