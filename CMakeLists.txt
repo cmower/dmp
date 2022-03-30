@@ -13,6 +13,8 @@ message_generation
 )
 find_package(Eigen REQUIRED)
 
+catkin_python_setup()
+
 add_message_files(
    FILES
    DMPData.msg
