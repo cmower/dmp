@@ -1,6 +1,5 @@
 import numpy as np
 from typing import Union
-from .dmp_proc import DMPProcessor
 
 class DMPDataCollector:
 
