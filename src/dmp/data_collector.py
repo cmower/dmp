@@ -1,7 +1,7 @@
 import rospy
 from abc import ABC, abstractmethod
 import numpy as np
-from typing import Union, Optional
+from typing import Union, Optional, Tuple
 from custom_ros_tools.tf import TfInterface
 from scipy.interpolate import interp1d
 
@@ -43,7 +43,7 @@ class DMPDataCollector(DataCollector):
             t -= t[0]
         pos_traj = np.array(self.p).T
 
-        if isinstance(self.inerpolate, int):
+        if isinstance(self.interpolate, int):
             pos_traj_fun = interp1d(t, pos_traj)
             t_out = np.linspace(t[0], t[-1], self.interpolate)
             pos_traj_out = pos_traj_fun(t_out)

@@ -59,7 +59,7 @@ class DMPProcessor:
             seg_length: float,
             tau: float,
             dt: float,
-            int: integrate_iter) -> Tuple[bool, np.ndarray, np.ndarray, np.ndarray]:
+            integrate_iter: int) -> Tuple[bool, np.ndarray, np.ndarray, np.ndarray]:
 
         # Set active dmp
         resp = self.set_active_dmp(dmp.dmp_list)
