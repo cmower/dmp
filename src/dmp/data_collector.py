@@ -37,8 +37,17 @@ class DMPDataCollector(DataCollector):
 
 class TFPositionDMPDataCollector(DataCollector):
 
-    def __init__(self, parent_frame_id: str, child_frame_id: str, hz: Optional[int] = 100, zero_time: Optional[bool] = True):
+    def __init__(
+            self,
+            parent_frame_id: str,
+            child_frame_id: str,
+            hz: Optional[int] = 100,
+            zero_time: Optional[bool] = True,
+            collect_x: Optional[bool] = True,
+            collect_y: Optional[bool] = True,
+            collect_z: Optional[bool] = True):
         self.timer = None
+        self.collect_idx = np.array([collect_x, collect_y, collect_z], dtype=bool)
         self.duration = rospy.Duration(1.0/float(hz))
         self.parent_frame_id = parent_frame_id
         self.child_frame_id = child_frame_id
@@ -59,7 +68,7 @@ class TFPositionDMPDataCollector(DataCollector):
         if tf is None: return
         t = rospy.Time.now().to_sec()
         p = self.tf.msg_to_pos(tf)
-        self.data_collector.log(t, p)
+        self.data_collector.log(t, p[self.collect_idx])
 
     def get(self):
         return self.data_collector.get()
