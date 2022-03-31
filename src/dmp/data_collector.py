@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 from typing import Union, Optional
 from custom_ros_tools.tf import TfInterface
+from scipy.interpolate import interp1d
 
 class DataCollector(ABC):
 
@@ -20,9 +21,11 @@ class DataCollector(ABC):
 
 class DMPDataCollector(DataCollector):
 
-    def __init__(self, zero_time: Optional[bool] = True):
+    def __init__(self, zero_time: Optional[bool] = True, interpolate: Optional[Union[int, None]] = None):
         self.reset()
         self.zero_time = zero_time
+        self.interpolate = interpolate
+
     def is_empty(self):
         return len(self.t) == 0
 
@@ -39,7 +42,16 @@ class DMPDataCollector(DataCollector):
         if self.zero_time:
             t -= t[0]
         pos_traj = np.array(self.p).T
-        return t, pos_traj
+
+        if isinstance(self.inerpolate, int):
+            pos_traj_fun = interp1d(t, pos_traj)
+            t_out = np.linspace(t[0], t[-1], self.interpolate)
+            pos_traj_out = pos_traj_fun(t_out)
+        else:
+            t_out = t
+            pos_traj_out = pos_traj
+
+        return t_out, pos_traj_out
 
 class TFPositionDMPDataCollector(DataCollector):
 
@@ -51,14 +63,17 @@ class TFPositionDMPDataCollector(DataCollector):
             zero_time: Optional[bool] = True,
             collect_x: Optional[bool] = True,
             collect_y: Optional[bool] = True,
-            collect_z: Optional[bool] = True):
+            collect_z: Optional[bool] = True,
+            interpolate: Optional[Union[int, None]] = None):
+
         self.timer = None
         self.collect_idx = np.array([collect_x, collect_y, collect_z], dtype=bool)
         self.duration = rospy.Duration(1.0/float(hz))
         self.parent_frame_id = parent_frame_id
         self.child_frame_id = child_frame_id
         self.tf = TfInterface()
-        self.data_collector = DMPDataCollector(zero_time=zero_time)
+        self.data_collector = DMPDataCollector(zero_time=zero_time, interpolate=interpolate)
+
     def is_empty(self):
         return self.data_collector.is_empty()
 
