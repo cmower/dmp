@@ -7,6 +7,10 @@ from custom_ros_tools.tf import TfInterface
 class DataCollector(ABC):
 
     @abstractmethod
+    def is_empty(self):
+        pass
+
+    @abstractmethod
     def reset(self):
         pass
 
@@ -19,6 +23,8 @@ class DMPDataCollector(DataCollector):
     def __init__(self, zero_time: Optional[bool] = True):
         self.reset()
         self.zero_time = zero_time
+    def is_empty(self):
+        return len(self.t) == 0
 
     def reset(self):
         self.t = []
@@ -53,6 +59,8 @@ class TFPositionDMPDataCollector(DataCollector):
         self.child_frame_id = child_frame_id
         self.tf = TfInterface()
         self.data_collector = DMPDataCollector(zero_time=zero_time)
+    def is_empty(self):
+        return self.data_collector.is_empty()
 
     def reset(self):
         self.data_collector.reset()
