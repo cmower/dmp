@@ -7,15 +7,22 @@ from custom_ros_tools.tf import TfInterface
 class DataCollector(ABC):
 
     @abstractmethod
+    def reset(self):
+        pass
+
+    @abstractmethod
     def get(self) -> Tuple[np.ndarray]:
         pass
 
 class DMPDataCollector(DataCollector):
 
     def __init__(self, zero_time: Optional[bool] = True):
+        self.reset()
+        self.zero_time = zero_time
+
+    def reset(self):
         self.t = []
         self.p = []
-        self.zero_time = zero_time
 
     def log(self, t: float, p: np.ndarray):
         self.t.append(t)
@@ -37,6 +44,9 @@ class TFPositionDMPDataCollector(DataCollector):
         self.child_frame_id = child_frame_id
         self.tf = TfInterface()
         self.data_collector = DMPDataCollector(zero_time=zero_time)
+
+    def reset(self):
+        self.data_collector.reset()
 
     def start(self):
         self.timer = rospy.Timer(self.duration, self.main_loop)
