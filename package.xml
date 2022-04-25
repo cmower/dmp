@@ -27,10 +27,10 @@
   <exec_depend>ros_comm</exec_depend>  <!-- rospy, roscpp -->
 
   <build_depend>message_generation</build_depend>
-  <build_depend>dmp_generate_messages</build_depend>
+  <!-- <build_depend>dmp_generate_messages</build_depend> -->
 
   <exec_depend>message_runtime</exec_depend>
-  <exec_depend>dmp_generate_messages</exec_depend>
+  <!-- <exec_depend>dmp_generate_messages</exec_depend> -->
 
   <depend>custom_ros_tools</depend>
   <depend>python-numpy</depend>
