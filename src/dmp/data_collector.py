@@ -37,6 +37,12 @@ class DMPDataCollector(DataCollector):
         self.t.append(t)
         self.p.append(p.tolist())
 
+    def get_first(self):
+        return self.t[0], self.p[0]
+
+    def get_last(self):
+        return self.t[-1], self.p[-1]
+
     def get(self):
         t = np.array(self.t)
         if self.zero_time:
